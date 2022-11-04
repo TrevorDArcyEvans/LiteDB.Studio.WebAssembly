@@ -4,6 +4,7 @@ using System.Text;
 using KristofferStrube.Blazor.FileSystemAccess;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using BlazorMonaco;
 
 public sealed partial class Index
 {
@@ -12,6 +13,7 @@ public sealed partial class Index
 
   private LiteDatabase _db;
   private string _info = string.Empty;
+  private MonacoEditor _query { get; set; }
 
   private async Task OpenAndReadFile()
   {
@@ -58,6 +60,26 @@ public sealed partial class Index
     sb.AppendLine($"Collation: {_db.Collation}");
 
     _info = sb.ToString();
+  }
+
+  private StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
+  {
+    return new StandaloneEditorConstructionOptions
+    {
+      Language = language,
+      AutomaticLayout = true,
+      RenderIndentGuides = false,
+      RenderFinalNewline = false,
+      ColorDecorators = true,
+      OccurrencesHighlight = true,
+      ReadOnly = readOnly,
+      Value = text
+    };
+  }
+
+  private StandaloneEditorConstructionOptions SQL_EditorOptions(MonacoEditor editor)
+  {
+    return EditorOptions("sql");
   }
 
   private static Stream GenerateStreamFromString(string str)
