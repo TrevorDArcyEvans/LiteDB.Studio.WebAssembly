@@ -14,8 +14,17 @@
 
 <PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
 
-<button onclick="@(async () => await OpenAndReadFile())">Browse...</button>
-<hr/>
+<MudPaper Elevation="25">
+  <MudToolBar>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.OpenInBrowser" OnClick="@(async () => await OpenAndReadFile())">Open...</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun">Run</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Start">Begin</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SaveAlt">Commit</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Undo">Rollback</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SafetyCheck">Checkpoint</MudButton>
+  </MudToolBar>
+</MudPaper>
 
 <div class="form-group-sm">
   <label class="control-label">Info</label>
@@ -24,5 +33,5 @@
 
 <label for="query">Query</label>
 <div>
-  <MonacoEditor @ref="_query" id="query" ConstructionOptions="SQL_EditorOptions" />
+  <MonacoEditor @ref="_query" id="query" ConstructionOptions="SQL_EditorOptions"/>
 </div>
