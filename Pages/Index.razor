@@ -1,0 +1,11 @@
+﻿@page "/"
+
+<PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
+
+<button onclick="@(async () => await OpenAndReadFile())">Browse...</button>
+<hr/>
+
+<div class="form-group-sm">
+  <label class="control-label">Info</label>
+  <textarea rows="20" value="@_info" class="form-control"></textarea>
+</div>

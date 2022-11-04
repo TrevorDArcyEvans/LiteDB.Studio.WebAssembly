@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteDB.Studio.WebAssembly", "LiteDB.Studio.WebAssembly.csproj", "{CEE5B74A-1C91-4939-91DB-4AAEA4C261D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEE5B74A-1C91-4939-91DB-4AAEA4C261D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE5B74A-1C91-4939-91DB-4AAEA4C261D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE5B74A-1C91-4939-91DB-4AAEA4C261D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE5B74A-1C91-4939-91DB-4AAEA4C261D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
