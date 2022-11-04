@@ -31,24 +31,40 @@
   <textarea rows="10" value="@_info" class="form-control"></textarea>
 </div>
 
-<MudDynamicTabs
-  Elevation="4"
-  Rounded="true"
-  ApplyEffectsToContainer="true"
-  PanelClass="px-4 py-6"
-  AddTab="AddTabCallback"
-  CloseTab="@(panel => CloseTabCallback(panel))"
-  AddIconToolTip="Click here to add a new tab"
-  CloseIconToolTip="Close this tab. All data will be lost">
-  @foreach (var item in _tabs)
-  {
-    <MudTabPanel Text="@item.Name" Tag="@item.Id">
-      <ChildContent>
-        <MonacoEditor
-          @ref="@item.Query"
-          Id="@item.Id.ToString()"
-          ConstructionOptions="SQL_EditorOptions"/>
-      </ChildContent>
-    </MudTabPanel>
-  }
-</MudDynamicTabs>
+<MudGrid>
+  <MudItem xs="2">
+    <MudTreeView T="string">
+      <MudTreeViewItem Value="@_fileName">
+        <MudTreeViewItem Value="@("col1")"/>
+        <MudTreeViewItem Value="@("col2")"/>
+        <MudTreeViewItem Value="@("_files")"/>
+        <MudTreeViewItem Value="@("_chunks")"/>
+        <MudTreeViewItem Value="@("customers")"/>
+      </MudTreeViewItem>
+    </MudTreeView>
+  </MudItem>
+
+  <MudItem xs="10">
+    <MudDynamicTabs
+      Elevation="4"
+      Rounded="true"
+      ApplyEffectsToContainer="true"
+      PanelClass="px-4 py-6"
+      AddTab="AddTabCallback"
+      CloseTab="@(panel => CloseTabCallback(panel))"
+      AddIconToolTip="Click here to add a new tab"
+      CloseIconToolTip="Close this tab. All data will be lost">
+      @foreach (var item in _tabs)
+      {
+        <MudTabPanel Text="@item.Name" Tag="@item.Id">
+          <ChildContent>
+            <MonacoEditor
+              @ref="@item.Query"
+              Id="@item.Id.ToString()"
+              ConstructionOptions="SQL_EditorOptions"/>
+          </ChildContent>
+        </MudTabPanel>
+      }
+    </MudDynamicTabs>
+  </MudItem>
+</MudGrid>

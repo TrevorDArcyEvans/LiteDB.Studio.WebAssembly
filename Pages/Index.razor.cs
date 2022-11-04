@@ -18,6 +18,8 @@ public sealed partial class Index
   private List<TabView> _tabs = new();
   private int _index;
 
+  private string _fileName;
+
   private async Task OpenAndReadFile()
   {
     _info = string.Empty;
@@ -46,6 +48,7 @@ public sealed partial class Index
     var file = await fileHandle.GetFileAsync();
     var dbStr = await file.TextAsync();
     var strm = GenerateStreamFromString(dbStr);
+    _fileName = file.Name;
     _db = new LiteDatabase(strm);
 
     var sb = new StringBuilder();
