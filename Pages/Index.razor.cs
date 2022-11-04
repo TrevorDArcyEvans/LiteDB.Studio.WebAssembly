@@ -17,17 +17,6 @@ public sealed partial class Index
 
   private List<TabView> _tabs = new();
   private int _index;
-  private bool _updateIndex;
-
-  protected override void OnAfterRender(bool firstRender)
-  {
-    if (_updateIndex)
-    {
-      _index = _tabs.Count;
-      StateHasChanged();
-      _updateIndex = false;
-    }
-  }
 
   private async Task OpenAndReadFile()
   {
@@ -100,13 +89,10 @@ public sealed partial class Index
   {
     var item = new TabView
     {
-      Name = $"{_index}",
+      Name = $"{++_index}",
       Id = Guid.NewGuid()
     };
     _tabs.Add(item);
-
-    // the tab becomes available after it is rendered. Hence, we can't set the index here
-    _updateIndex = true;
   }
 
   private void CloseTabCallback(MudTabPanel panel)
