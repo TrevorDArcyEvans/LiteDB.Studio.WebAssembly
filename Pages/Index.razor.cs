@@ -1,10 +1,11 @@
 namespace LiteDB.Studio.WebAssembly.Pages;
 
 using System.Text;
+using BlazorMonaco;
 using KristofferStrube.Blazor.FileSystemAccess;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using BlazorMonaco;
+using MudBlazor;
 
 public sealed partial class Index
 {
@@ -13,7 +14,20 @@ public sealed partial class Index
 
   private LiteDatabase _db;
   private string _info = string.Empty;
-  private MonacoEditor _query { get; set; }
+
+  private List<TabView> _tabs = new();
+  private int _index;
+  private bool _updateIndex;
+
+  protected override void OnAfterRender(bool firstRender)
+  {
+    if (_updateIndex)
+    {
+      _index = _tabs.Count;
+      StateHasChanged();
+      _updateIndex = false;
+    }
+  }
 
   private async Task OpenAndReadFile()
   {
@@ -62,7 +76,7 @@ public sealed partial class Index
     _info = sb.ToString();
   }
 
-  private StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
+  private static StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
   {
     return new StandaloneEditorConstructionOptions
     {
@@ -77,9 +91,31 @@ public sealed partial class Index
     };
   }
 
-  private StandaloneEditorConstructionOptions SQL_EditorOptions(MonacoEditor editor)
+  private static StandaloneEditorConstructionOptions SQL_EditorOptions(MonacoEditor editor)
   {
     return EditorOptions("sql");
+  }
+
+  private void AddTabCallback()
+  {
+    var item = new TabView
+    {
+      Name = $"{_index}",
+      Id = Guid.NewGuid()
+    };
+    _tabs.Add(item);
+
+    // the tab becomes available after it is rendered. Hence, we can't set the index here
+    _updateIndex = true;
+  }
+
+  private void CloseTabCallback(MudTabPanel panel)
+  {
+    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
+    if (tabView is not null)
+    {
+      _tabs.Remove(tabView);
+    }
   }
 
   private static Stream GenerateStreamFromString(string str)

@@ -28,10 +28,27 @@
 
 <div class="form-group-sm">
   <label class="control-label">Info</label>
-  <textarea rows="20" value="@_info" class="form-control"></textarea>
+  <textarea rows="10" value="@_info" class="form-control"></textarea>
 </div>
 
-<label for="query">Query</label>
-<div>
-  <MonacoEditor @ref="_query" id="query" ConstructionOptions="SQL_EditorOptions"/>
-</div>
+<MudDynamicTabs
+  Elevation="4"
+  Rounded="true"
+  ApplyEffectsToContainer="true"
+  PanelClass="px-4 py-6"
+  AddTab="AddTabCallback"
+  CloseTab="@(panel => CloseTabCallback(panel))" @bind-ActivePanelIndex="_index"
+  AddIconToolTip="Click here to add a new tab"
+  CloseIconToolTip="Close this tab. All data will be lost">
+  @foreach (var item in _tabs)
+  {
+    <MudTabPanel Text="@item.Name" Tag="@item.Id">
+      <ChildContent>
+        <MonacoEditor
+          @ref="@item.Query"
+          Id="@item.Id.ToString()"
+          ConstructionOptions="SQL_EditorOptions"/>
+      </ChildContent>
+    </MudTabPanel>
+  }
+</MudDynamicTabs>
