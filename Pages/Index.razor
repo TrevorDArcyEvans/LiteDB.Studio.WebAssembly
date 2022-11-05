@@ -14,6 +14,20 @@
 
 <PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
 
+<ContextMenu Id="collectionsMenu">
+  <Item OnClick="@OnRun">Item 1</Item>
+  <Item OnClick="@OnRun">Item 2</Item>
+  <Item OnClick="@OnRun">Item 3</Item>
+  <Seperator/>
+  <Item>
+    Submenu
+    <SubMenu>
+      <Item OnClick="@OnRun">Submenu Item 1</Item>
+      <Item OnClick="@OnRun">Submenu Item 2</Item>
+    </SubMenu>
+  </Item>
+</ContextMenu>
+
 <MudPaper Elevation="25">
   <MudToolBar>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.OpenInBrowser" OnClick="@(async () => await OpenAndReadFile())">Open...</MudButton>
@@ -37,7 +51,9 @@
       <MudTreeViewItem T="string" Text="@_fileName">
         @foreach (var item in _items)
         {
-          <MudTreeViewItem T="string" Text="@item"/>
+          <ContextMenuTrigger MenuId="collectionsMenu">
+            <MudTreeViewItem T="string" Text="@item"/>
+          </ContextMenuTrigger>
         }
       </MudTreeViewItem>
     </MudTreeView>
