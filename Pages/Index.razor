@@ -52,7 +52,8 @@
       AddTab="AddTabCallback"
       CloseTab="@(panel => CloseTabCallback(panel))"
       AddIconToolTip="Click here to add a new tab"
-      CloseIconToolTip="Close this tab. All data will be lost">
+      CloseIconToolTip="Close this tab. All data will be lost"
+      @bind-ActivePanelIndex="_activeTabIndex">
       @foreach (var item in _tabs)
       {
         <MudTabPanel Text="@item.Name" Tag="@item.Id">
@@ -62,10 +63,10 @@
                 @ref="@item.Query"
                 Id="@item.Id.ToString()"
                 ConstructionOptions="SQL_EditorOptions"/>
-              <MudTable Items="@_results" Breakpoint="Breakpoint.Sm">
+              <MudTable Items="@item.Results" Breakpoint="Breakpoint.Sm">
                 <HeaderContent>
                   @{
-                    var cols = _results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                    var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
                     foreach (var col in cols)
                     {
                       <MudTh>@col</MudTh>
@@ -74,7 +75,7 @@
                 </HeaderContent>
                 <RowTemplate>
                   @{
-                    var cols = _results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                    var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
                     foreach (var col in cols)
                     {
                       <MudTd DataLabel="@col">@context[col].ToString()</MudTd>

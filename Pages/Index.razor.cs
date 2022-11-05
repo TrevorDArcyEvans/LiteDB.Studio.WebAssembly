@@ -16,13 +16,12 @@ public sealed partial class Index
   private string _info = string.Empty;
 
   private List<TabView> _tabs = new();
-  private int _index;
+  private int _allTabsCount;
+  private int _activeTabIndex;
 
   private string _fileName;
   private HashSet<string> _items = new ();
-
-  private List<BsonDocument> _results = new();
-
+  
   private async Task OpenAndReadFile()
   {
     _info = string.Empty;
@@ -96,7 +95,7 @@ public sealed partial class Index
   {
     var item = new TabView
     {
-      Name = $"{++_index}",
+      Name = $"{++_allTabsCount}",
       Id = Guid.NewGuid()
     };
     _tabs.Add(item);
@@ -113,7 +112,7 @@ public sealed partial class Index
 
   private void OnRun()
   {
-    _results = Enumerable.Range(0, 10)
+    _tabs[_activeTabIndex].Results = Enumerable.Range(0, 10)
       .Select(_ =>
       {
         var bval1 = new BsonValue($"sign {Guid.NewGuid().ToString()}");
