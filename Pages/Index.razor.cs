@@ -23,6 +23,7 @@ public sealed partial class Index
 
   private string _fileName;
   private HashSet<string> _collections = new();
+  private string _selColl;
 
   private async Task OpenAndReadFile()
   {
@@ -141,6 +142,11 @@ public sealed partial class Index
     _tabs[_activeTabIndex].Results = results;
     _tabs[_activeTabIndex].ResultsJson = resultsJson;
     _tabs[_activeTabIndex].Parameters = System.Text.Json.JsonSerializer.Serialize(new {}, options);
+  }
+
+  private void OnCollectionSelected(string coll)
+  {
+    _selColl = coll;
   }
 
   private static Stream GenerateStreamFromString(string str)

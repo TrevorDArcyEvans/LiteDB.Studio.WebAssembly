@@ -47,12 +47,12 @@
 
 <MudGrid>
   <MudItem xs="2">
-    <MudTreeView T="string" Items="_collections">
+    <MudTreeView T="string" Items="_collections" SelectedValueChanged="OnCollectionSelected">
       <MudTreeViewItem T="string" Text="@_fileName">
         @foreach (var coll in _collections)
         {
           <ContextMenuTrigger MenuId="collectionsMenu">
-            <MudTreeViewItem T="string" Text="@coll"/>
+            <MudTreeViewItem T="string" Text="@coll" Value="@coll"/>
           </ContextMenuTrigger>
         }
       </MudTreeViewItem>
