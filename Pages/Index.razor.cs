@@ -21,6 +21,8 @@ public sealed partial class Index
   private string _fileName;
   private HashSet<string> _items = new ();
 
+  private List<BsonDocument> _results = new();
+
   private async Task OpenAndReadFile()
   {
     _info = string.Empty;
@@ -107,6 +109,24 @@ public sealed partial class Index
     {
       _tabs.Remove(tabView);
     }
+  }
+
+  private void OnRun()
+  {
+    _results = Enumerable.Range(0, 10)
+      .Select(_ =>
+      {
+        var bval1 = new BsonValue($"sign {Guid.NewGuid().ToString()}");
+        var bval2 = new BsonValue(Guid.NewGuid());
+        var dict = new Dictionary<string, BsonValue>
+        {
+          {"sign", bval1},
+          {"name", bval2}
+        };
+        var bdoc = new BsonDocument(dict);
+        return bdoc;
+      })
+      .ToList();
   }
 
   private static Stream GenerateStreamFromString(string str)

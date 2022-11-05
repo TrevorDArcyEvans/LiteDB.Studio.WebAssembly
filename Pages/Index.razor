@@ -18,7 +18,7 @@
   <MudToolBar>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.OpenInBrowser" OnClick="@(async () => await OpenAndReadFile())">Open...</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh">Refresh</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun">Run</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun" OnClick="@OnRun">Run</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Start">Begin</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SaveAlt">Commit</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Undo">Rollback</MudButton>
@@ -57,10 +57,32 @@
       {
         <MudTabPanel Text="@item.Name" Tag="@item.Id">
           <ChildContent>
-            <MonacoEditor
-              @ref="@item.Query"
-              Id="@item.Id.ToString()"
-              ConstructionOptions="SQL_EditorOptions"/>
+            <MudStack>
+              <MonacoEditor
+                @ref="@item.Query"
+                Id="@item.Id.ToString()"
+                ConstructionOptions="SQL_EditorOptions"/>
+              <MudTable Items="@_results" Breakpoint="Breakpoint.Sm">
+                <HeaderContent>
+                  @{
+                    var cols = _results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                    foreach (var col in cols)
+                    {
+                      <MudTh>@col</MudTh>
+                    }
+                  }
+                </HeaderContent>
+                <RowTemplate>
+                  @{
+                    var cols = _results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                    foreach (var col in cols)
+                    {
+                      <MudTd DataLabel="@col">@context[col].ToString()</MudTd>
+                    }
+                  }
+                </RowTemplate>
+              </MudTable>
+            </MudStack>
           </ChildContent>
         </MudTabPanel>
       }
