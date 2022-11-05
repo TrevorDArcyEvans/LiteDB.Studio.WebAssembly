@@ -33,13 +33,12 @@
 
 <MudGrid>
   <MudItem xs="2">
-    <MudTreeView T="string">
-      <MudTreeViewItem Value="@_fileName">
-        <MudTreeViewItem Value="@("col1")"/>
-        <MudTreeViewItem Value="@("col2")"/>
-        <MudTreeViewItem Value="@("_files")"/>
-        <MudTreeViewItem Value="@("_chunks")"/>
-        <MudTreeViewItem Value="@("customers")"/>
+    <MudTreeView T="string" Items="_items">
+      <MudTreeViewItem T="string" Text="@_fileName">
+        @foreach (var item in _items)
+        {
+          <MudTreeViewItem T="string" Text="@item"/>
+        }
       </MudTreeViewItem>
     </MudTreeView>
   </MudItem>

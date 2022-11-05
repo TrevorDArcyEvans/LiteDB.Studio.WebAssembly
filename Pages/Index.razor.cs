@@ -19,6 +19,7 @@ public sealed partial class Index
   private int _index;
 
   private string _fileName;
+  private HashSet<string> _items = new ();
 
   private async Task OpenAndReadFile()
   {
@@ -50,6 +51,7 @@ public sealed partial class Index
     var strm = GenerateStreamFromString(dbStr);
     _fileName = file.Name;
     _db = new LiteDatabase(strm);
+    _items = _db.GetCollectionNames().ToHashSet();
 
     var sb = new StringBuilder();
     sb.AppendLine($"Filename: {file.Name}");
