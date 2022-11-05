@@ -140,6 +140,7 @@ public sealed partial class Index
     var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
     _tabs[_activeTabIndex].Results = results;
     _tabs[_activeTabIndex].ResultsJson = resultsJson;
+    _tabs[_activeTabIndex].Parameters = System.Text.Json.JsonSerializer.Serialize(new {}, options);
   }
 
   private static Stream GenerateStreamFromString(string str)
