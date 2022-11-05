@@ -22,7 +22,7 @@ public sealed partial class Index
   private int _activeTabIndex;
 
   private string _fileName;
-  private HashSet<string> _items = new();
+  private HashSet<string> _collections = new();
 
   private async Task OpenAndReadFile()
   {
@@ -54,7 +54,7 @@ public sealed partial class Index
     var strm = GenerateStreamFromString(dbStr);
     _fileName = file.Name;
     _db = new LiteDatabase(strm);
-    _items = _db.GetCollectionNames().ToHashSet();
+    _collections = _db.GetCollectionNames().ToHashSet();
 
     var sb = new StringBuilder();
     sb.AppendLine($"Filename: {file.Name}");
