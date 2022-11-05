@@ -7,5 +7,6 @@ internal class TabView
   public string Name { get; set; }
   public MonacoEditor Query { get; set; }
   public List<BsonDocument> Results { get; set; } = new();
+  public string ResultsJson { get; set; }
   public Guid Id { get; set; }
 }

@@ -1,3 +1,5 @@
+using System.Security.AccessControl;
+
 namespace LiteDB.Studio.WebAssembly.Pages;
 
 using System.Text;
@@ -20,8 +22,8 @@ public sealed partial class Index
   private int _activeTabIndex;
 
   private string _fileName;
-  private HashSet<string> _items = new ();
-  
+  private HashSet<string> _items = new();
+
   private async Task OpenAndReadFile()
   {
     _info = string.Empty;
@@ -112,7 +114,7 @@ public sealed partial class Index
 
   private void OnRun()
   {
-    _tabs[_activeTabIndex].Results = Enumerable.Range(0, 10)
+    var results = Enumerable.Range(0, 10)
       .Select(_ =>
       {
         var bval1 = new BsonValue($"sign {Guid.NewGuid().ToString()}");
@@ -126,6 +128,18 @@ public sealed partial class Index
         return bdoc;
       })
       .ToList();
+    var resultsDicStr = results
+      .Select(bdoc =>
+        bdoc.ToDictionary(
+          bd => bd.Key,
+          bd => bd.Value.ToString()));
+    var options = new System.Text.Json.JsonSerializerOptions
+    {
+      WriteIndented = true
+    };
+    var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
+    _tabs[_activeTabIndex].Results = results;
+    _tabs[_activeTabIndex].ResultsJson = resultsJson;
   }
 
   private static Stream GenerateStreamFromString(string str)

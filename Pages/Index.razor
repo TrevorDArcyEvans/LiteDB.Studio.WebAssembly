@@ -63,26 +63,36 @@
                 @ref="@item.Query"
                 Id="@item.Id.ToString()"
                 ConstructionOptions="SQL_EditorOptions"/>
-              <MudTable Items="@item.Results" Breakpoint="Breakpoint.Sm">
-                <HeaderContent>
-                  @{
-                    var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
-                    foreach (var col in cols)
-                    {
-                      <MudTh>@col</MudTh>
-                    }
-                  }
-                </HeaderContent>
-                <RowTemplate>
-                  @{
-                    var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
-                    foreach (var col in cols)
-                    {
-                      <MudTd DataLabel="@col">@context[col].ToString()</MudTd>
-                    }
-                  }
-                </RowTemplate>
-              </MudTable>
+              <MudTabs Elevation="2" Rounded="true">
+                <MudTabPanel Text="Grid">
+                  <MudTable Items="@item.Results" Breakpoint="Breakpoint.Sm">
+                    <HeaderContent>
+                      @{
+                        var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                        foreach (var col in cols)
+                        {
+                          <MudTh>@col</MudTh>
+                        }
+                      }
+                    </HeaderContent>
+                    <RowTemplate>
+                      @{
+                        var cols = item.Results.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>();
+                        foreach (var col in cols)
+                        {
+                          <MudTd DataLabel="@col">@context[col].ToString()</MudTd>
+                        }
+                      }
+                    </RowTemplate>
+                  </MudTable>
+                </MudTabPanel>
+                <MudTabPanel Text="Text">
+                  <MudTextField @bind-Value="@item.ResultsJson" Lines="20"/>
+                </MudTabPanel>
+                <MudTabPanel Text="Parameters">
+                  <MudText>{}</MudText>
+                </MudTabPanel>
+              </MudTabs>
             </MudStack>
           </ChildContent>
         </MudTabPanel>
