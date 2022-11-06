@@ -139,6 +139,21 @@ public sealed partial class Index
     activeTab.Results = results;
     activeTab.ResultsJson = resultsJson;
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
+
+
+    const int MaxResults = 100;
+    var parameters = new BsonDocument();
+    var sql = await activeTab.Query.GetValue();
+    var result = new List<BsonValue>();
+    var reader = _db.Execute(sql, parameters);
+    while (reader.Read())
+    {
+      result.Add(reader.Current);
+      if (result.Count >= MaxResults)
+      {
+        break;
+      }
+    }
   }
 
   private void OnBegin()
