@@ -43,7 +43,14 @@ public sealed partial class Index
     return EditorOptions("sql");
   }
 
-  private void AddTabCallback()
+  private void OnCollectionSelected(string coll)
+  {
+    _selColl = coll;
+  }
+
+  #region tab handling
+
+  private void AddTab()
   {
     var item = new TabView
     {
@@ -53,7 +60,7 @@ public sealed partial class Index
     _tabs.Add(item);
   }
 
-  private void CloseTabCallback(MudTabPanel panel)
+  private void CloseTab(MudTabPanel panel)
   {
     var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
     if (tabView is not null)
@@ -61,6 +68,8 @@ public sealed partial class Index
       _tabs.Remove(tabView);
     }
   }
+
+  #endregion
 
   #region toolbar menus
 
@@ -148,11 +157,6 @@ public sealed partial class Index
   }
 
   #endregion
-
-  private void OnCollectionSelected(string coll)
-  {
-    _selColl = coll;
-  }
 
   #region collection context menus
 

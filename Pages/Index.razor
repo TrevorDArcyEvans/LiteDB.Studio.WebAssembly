@@ -58,8 +58,8 @@
       Rounded="true"
       ApplyEffectsToContainer="true"
       PanelClass="px-4 py-6"
-      AddTab="AddTabCallback"
-      CloseTab="@(panel => CloseTabCallback(panel))"
+      AddTab="AddTab"
+      CloseTab="@(panel => CloseTab(panel))"
       AddIconToolTip="Click here to add a new tab"
       CloseIconToolTip="Close this tab. All data will be lost"
       @bind-ActivePanelIndex="_activeTabIndex">
