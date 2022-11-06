@@ -29,12 +29,12 @@
 <MudPaper Elevation="25">
   <MudToolBar>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.OpenInBrowser" OnClick="@(async () => await OnOpen())">Open...</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh" OnClick="OnRefresh">Refresh</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun" OnClick="@OnRun">Run</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Start" OnClick="OnBegin">Begin</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SaveAlt" OnClick="OnCommit">Commit</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Undo" OnClick="OnRollback">Rollback</MudButton>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SafetyCheck" OnClick="OnCheckpoint">Checkpoint</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh" OnClick="OnRefresh" Disabled="_disableMainMenu">Refresh</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun" OnClick="@(async () => await OnRun())" Disabled="_disableMainMenu || _tabs.Count == 0">Run</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Start" OnClick="OnBegin" Disabled="_disableMainMenu">Begin</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SaveAlt" OnClick="OnCommit" Disabled="_disableMainMenu">Commit</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Undo" OnClick="OnRollback" Disabled="_disableMainMenu">Rollback</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SafetyCheck" OnClick="OnCheckpoint" Disabled="_disableMainMenu">Checkpoint</MudButton>
   </MudToolBar>
 </MudPaper>
 

@@ -22,6 +22,7 @@ public sealed partial class Index
   private HashSet<string> _collections = new();
   private string _selColl;
   private bool _enableCollMenu => _tabs.Count > 0;
+  private bool _disableMainMenu => _db is null;
 
   private static StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
   {
@@ -108,7 +109,7 @@ public sealed partial class Index
   {
   }
 
-  private void OnRun()
+  private async Task OnRun()
   {
     var results = Enumerable.Range(0, 10)
       .Select(_ =>
@@ -142,18 +143,22 @@ public sealed partial class Index
 
   private void OnBegin()
   {
+    _ = _db.BeginTrans();
   }
 
   private void OnCommit()
   {
+    _ = _db.Commit();
   }
 
   private void OnRollback()
   {
+    _ = _db.Rollback();
   }
 
   private void OnCheckpoint()
   {
+    _db.Checkpoint();
   }
 
   #endregion
