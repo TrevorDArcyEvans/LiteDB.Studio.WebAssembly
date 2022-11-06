@@ -1,5 +1,3 @@
-using System.Security.AccessControl;
-
 namespace LiteDB.Studio.WebAssembly.Pages;
 
 using System.Text;
@@ -15,7 +13,6 @@ public sealed partial class Index
   private FileSystemAccessService _fileSysSvc { get; set; }
 
   private LiteDatabase _db;
-  private string _info = string.Empty;
 
   private List<TabView> _tabs = new();
   private int _allTabsCount;
@@ -28,7 +25,6 @@ public sealed partial class Index
 
   private async Task OpenAndReadFile()
   {
-    _info = string.Empty;
     FileSystemFileHandle? fileHandle = null;
     try
     {
@@ -43,7 +39,6 @@ public sealed partial class Index
     catch (JSException ex)
     {
       // Handle Exception or cancellation of File Access prompt
-      _info = ex.Message;
     }
 
     if (fileHandle is null)
@@ -57,22 +52,6 @@ public sealed partial class Index
     _fileName = file.Name;
     _db = new LiteDatabase(strm);
     _collections = _db.GetCollectionNames().ToHashSet();
-
-    var sb = new StringBuilder();
-    sb.AppendLine($"Filename: {file.Name}");
-    sb.AppendLine($"UserVersion: {_db.UserVersion}");
-    sb.AppendLine($"CollectionNames:");
-    foreach (var name in _db.GetCollectionNames())
-    {
-      sb.AppendLine($"  {name}");
-    }
-
-    sb.AppendLine($"UtcDate: {_db.UtcDate}");
-    sb.AppendLine($"LimitSize: {_db.LimitSize}");
-    sb.AppendLine($"CheckpointSize: {_db.CheckpointSize}");
-    sb.AppendLine($"Collation: {_db.Collation}");
-
-    _info = sb.ToString();
   }
 
   private static StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
@@ -156,7 +135,7 @@ public sealed partial class Index
     var activeTab = _tabs[_activeTabIndex];
     await activeTab.Query.SetValue(query);
   }
-  
+
   private async Task OnAll()
   {
     var sql = $"SELECT $ FROM {_selColl};";
