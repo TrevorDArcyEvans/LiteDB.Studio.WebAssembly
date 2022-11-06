@@ -15,17 +15,15 @@
 <PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
 
 <ContextMenu Id="collectionsMenu">
-  <Item OnClick="@OnRun">Item 1</Item>
-  <Item OnClick="@OnRun">Item 2</Item>
-  <Item OnClick="@OnRun">Item 3</Item>
+  <Item OnClick="@(async () => await OnAll())" Enabled="_enableCollMenu">All</Item>
+  <Item OnClick="@(async () => await OnCount())" Enabled="_enableCollMenu">Count</Item>
+  <Item OnClick="@(async () => await OnExplainPlan())" Enabled="_enableCollMenu">Explain plan</Item>
   <Seperator/>
-  <Item>
-    Submenu
-    <SubMenu>
-      <Item OnClick="@OnRun">Submenu Item 1</Item>
-      <Item OnClick="@OnRun">Submenu Item 2</Item>
-    </SubMenu>
-  </Item>
+  <Item OnClick="@(async () => await OnIndexes())" Enabled="_enableCollMenu">Indexes</Item>
+  <Item OnClick="@(async () => await OnExport())" Enabled="_enableCollMenu">Export</Item>
+  <Item OnClick="@(async () => await OnAnalyse())" Enabled="_enableCollMenu">Analyse</Item>
+  <Item OnClick="@(async () => await OnRename())" Enabled="_enableCollMenu">Rename</Item>
+  <Item OnClick="@(async () => await OnDrop())" Enabled="_enableCollMenu">Drop</Item>
 </ContextMenu>
 
 <MudPaper Elevation="25">

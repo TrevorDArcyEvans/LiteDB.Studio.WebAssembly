@@ -24,6 +24,7 @@ public sealed partial class Index
   private string _fileName;
   private HashSet<string> _collections = new();
   private string _selColl;
+  private bool _enableCollMenu => _tabs.Count > 0;
 
   private async Task OpenAndReadFile()
   {
@@ -139,14 +140,69 @@ public sealed partial class Index
       WriteIndented = true
     };
     var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
-    _tabs[_activeTabIndex].Results = results;
-    _tabs[_activeTabIndex].ResultsJson = resultsJson;
-    _tabs[_activeTabIndex].Parameters = System.Text.Json.JsonSerializer.Serialize(new {}, options);
+    var activeTab = _tabs[_activeTabIndex];
+    activeTab.Results = results;
+    activeTab.ResultsJson = resultsJson;
+    activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
   }
 
   private void OnCollectionSelected(string coll)
   {
     _selColl = coll;
+  }
+
+  private async Task UpdateQuery(string query)
+  {
+    var activeTab = _tabs[_activeTabIndex];
+    await activeTab.Query.SetValue(query);
+  }
+  
+  private async Task OnAll()
+  {
+    var sql = $"SELECT $ FROM {_selColl};";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnCount()
+  {
+    var sql = $"SELECT COUNT(*) FROM {_selColl};";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnExplainPlan()
+  {
+    var sql = $"EXPLAIN SELECT $ FROM {_selColl};";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnIndexes()
+  {
+    var sql = $"SELECT $ FROM $indexes WHERE collection = \"{_selColl}\";";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnExport()
+  {
+    var sql = $"SELECT ${Environment.NewLine}  INTO $file(\'C:/temp/{_selColl}.json\'){Environment.NewLine}  FROM {_selColl};";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnAnalyse()
+  {
+    var sql = $"ANALYZE {_selColl};";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnRename()
+  {
+    var sql = $"RENAME COLLECTION {_selColl} TO new_name;";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnDrop()
+  {
+    var sql = $"DROP COLLECTION {_selColl};";
+    await UpdateQuery(sql);
   }
 
   private static Stream GenerateStreamFromString(string str)
