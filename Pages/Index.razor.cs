@@ -23,37 +23,6 @@ public sealed partial class Index
   private string _selColl;
   private bool _enableCollMenu => _tabs.Count > 0;
 
-  private async Task OpenAndReadFile()
-  {
-    FileSystemFileHandle? fileHandle = null;
-    try
-    {
-      OpenFilePickerOptionsStartInWellKnownDirectory options = new()
-      {
-        Multiple = false,
-        StartIn = WellKnownDirectory.Downloads
-      };
-      var fileHandles = await _fileSysSvc.ShowOpenFilePickerAsync(options);
-      fileHandle = fileHandles.Single();
-    }
-    catch (JSException ex)
-    {
-      // Handle Exception or cancellation of File Access prompt
-    }
-
-    if (fileHandle is null)
-    {
-      return;
-    }
-
-    var file = await fileHandle.GetFileAsync();
-    var dbStr = await file.TextAsync();
-    var strm = GenerateStreamFromString(dbStr);
-    _fileName = file.Name;
-    _db = new LiteDatabase(strm);
-    _collections = _db.GetCollectionNames().ToHashSet();
-  }
-
   private static StandaloneEditorConstructionOptions EditorOptions(string language, bool readOnly = false, string text = "")
   {
     return new StandaloneEditorConstructionOptions
@@ -93,6 +62,43 @@ public sealed partial class Index
     }
   }
 
+  #region toolbar menus
+
+  private async Task OnOpen()
+  {
+    FileSystemFileHandle? fileHandle = null;
+    try
+    {
+      OpenFilePickerOptionsStartInWellKnownDirectory options = new()
+      {
+        Multiple = false,
+        StartIn = WellKnownDirectory.Downloads
+      };
+      var fileHandles = await _fileSysSvc.ShowOpenFilePickerAsync(options);
+      fileHandle = fileHandles.Single();
+    }
+    catch (JSException ex)
+    {
+      // Handle Exception or cancellation of File Access prompt
+    }
+
+    if (fileHandle is null)
+    {
+      return;
+    }
+
+    var file = await fileHandle.GetFileAsync();
+    var dbStr = await file.TextAsync();
+    var strm = GenerateStreamFromString(dbStr);
+    _fileName = file.Name;
+    _db = new LiteDatabase(strm);
+    _collections = _db.GetCollectionNames().ToHashSet();
+  }
+
+  private void OnRefresh()
+  {
+  }
+
   private void OnRun()
   {
     var results = Enumerable.Range(0, 10)
@@ -125,10 +131,30 @@ public sealed partial class Index
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
   }
 
+  private void OnBegin()
+  {
+  }
+
+  private void OnCommit()
+  {
+  }
+
+  private void OnRollback()
+  {
+  }
+
+  private void OnCheckpoint()
+  {
+  }
+
+  #endregion
+
   private void OnCollectionSelected(string coll)
   {
     _selColl = coll;
   }
+
+  #region collection context menus
 
   private async Task UpdateQuery(string query)
   {
@@ -183,6 +209,8 @@ public sealed partial class Index
     var sql = $"DROP COLLECTION {_selColl};";
     await UpdateQuery(sql);
   }
+
+  #endregion
 
   private static Stream GenerateStreamFromString(string str)
   {
