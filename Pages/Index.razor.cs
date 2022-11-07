@@ -63,7 +63,7 @@ public sealed partial class Index
 
   private void CloseTab(MudTabPanel panel)
   {
-    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
+    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid)panel.Tag);
     if (tabView is not null)
     {
       _tabs.Remove(tabView);
@@ -118,8 +118,8 @@ public sealed partial class Index
         var bval2 = new BsonValue(Guid.NewGuid());
         var dict = new Dictionary<string, BsonValue>
         {
-          {"sign", bval1},
-          {"name", bval2}
+          { "sign", bval1 },
+          { "name", bval2 }
         };
         var bdoc = new BsonDocument(dict);
         return bdoc;
@@ -145,7 +145,12 @@ public sealed partial class Index
     var parameters = new BsonDocument();
     var sql = await activeTab.Query.GetValue();
     var result = new List<BsonValue>();
+
+    // TODO   blocked by bug in LiteDB
+    //    [BUG] Exception thrown dropping collection when database loaded from memory stream
+    //      https://github.com/mbdavid/LiteDB/issues/2247
     var reader = _db.Execute(sql, parameters);
+
     while (reader.Read())
     {
       result.Add(reader.Current);
