@@ -1,8 +1,9 @@
 namespace LiteDB.Studio.WebAssembly.Pages;
 
 using BlazorMonaco;
+using System.Reflection.PortableExecutable;
 
-internal class TabView
+internal sealed class TabView
 {
   public string Name { get; set; }
   public MonacoEditor Query { get; set; }
