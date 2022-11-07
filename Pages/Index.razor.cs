@@ -145,6 +145,11 @@ public sealed partial class Index
     activeTab.Results = results;
     activeTab.ResultsJson = resultsJson;
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
+
+    // TODO   blocked by bug in LiteDB
+    //    [BUG] Exception thrown dropping collection when database loaded from memory stream
+    //      https://github.com/mbdavid/LiteDB/issues/2247
+
   }
 
   private void OnBegin()
