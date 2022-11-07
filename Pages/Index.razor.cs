@@ -63,7 +63,7 @@ public sealed partial class Index
 
   private void CloseTab(MudTabPanel panel)
   {
-    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
+    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid)panel.Tag);
     if (tabView is not null)
     {
       _tabs.Remove(tabView);
@@ -111,20 +111,26 @@ public sealed partial class Index
 
   private async Task OnRun()
   {
-    var results = Enumerable.Range(0, 10)
-      .Select(_ =>
+    const int MaxResults = 100;
+
+    var activeTab = _tabs[_activeTabIndex];
+    var sql = await activeTab.Query.GetValue();
+    var results = new List<BsonDocument>();
+    using var reader = _db.Execute(sql, new BsonDocument());
+    while (reader.Read())
+    {
+      var val = reader.Current;
+      if (val.IsDocument)
       {
-        var bval1 = new BsonValue($"sign {Guid.NewGuid().ToString()}");
-        var bval2 = new BsonValue(Guid.NewGuid());
-        var dict = new Dictionary<string, BsonValue>
-        {
-          {"sign", bval1},
-          {"name", bval2}
-        };
-        var bdoc = new BsonDocument(dict);
-        return bdoc;
-      })
-      .ToList();
+        results.Add(val.AsDocument);
+      }
+
+      if (results.Count >= MaxResults)
+      {
+        break;
+      }
+    }
+
     var resultsDicStr = results
       .Select(bdoc =>
         bdoc.ToDictionary(
@@ -135,25 +141,10 @@ public sealed partial class Index
       WriteIndented = true
     };
     var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
-    var activeTab = _tabs[_activeTabIndex];
+
     activeTab.Results = results;
     activeTab.ResultsJson = resultsJson;
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
-
-
-    const int MaxResults = 100;
-    var parameters = new BsonDocument();
-    var sql = await activeTab.Query.GetValue();
-    var result = new List<BsonValue>();
-    var reader = _db.Execute(sql, parameters);
-    while (reader.Read())
-    {
-      result.Add(reader.Current);
-      if (result.Count >= MaxResults)
-      {
-        break;
-      }
-    }
   }
 
   private void OnBegin()
