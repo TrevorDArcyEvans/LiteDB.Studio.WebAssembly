@@ -3,6 +3,19 @@ bringing the goodness of [LiteDB.Studio](https://github.com/mbdavid/LiteDB.Studi
 
 ![screenshot](screenshot.png)
 
+## Prerequisites
+* .NET Core 6
+
+## Getting started
+```bash
+git clone https://github.com/TrevorDArcyEvans/LiteDB.Studio.WebAssembly.git
+cd LiteDB.Studio.WebAssembly
+dotnet restore
+dotnet build
+dotnet run
+```
+open [LiteDB.Studio.WebAssembly](https://localhost:7050/)
+
 ## LiteDB bugs
 ~~It seems that [_LiteDB_](https://github.com/mbdavid/LiteDB) was never really intended to operate on a stream:~~
 * ~~[Exception thrown dropping collection when database loaded from memory stream](https://github.com/mbdavid/LiteDB/issues/2247)~~
