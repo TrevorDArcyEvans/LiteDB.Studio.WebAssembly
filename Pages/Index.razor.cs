@@ -68,7 +68,7 @@ public sealed partial class Index
 
   private void CloseTab(MudTabPanel panel)
   {
-    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid)panel.Tag);
+    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
     if (tabView is not null)
     {
       _tabs.Remove(tabView);
@@ -148,38 +148,6 @@ public sealed partial class Index
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
 
     _collections = _db.GetCollectionNames().ToHashSet();
-  }
-
-  private static string GetResultsJson(List<BsonDocument> results, JsonSerializerOptions options)
-  {
-    var resultsDicStr = results
-      .Select(bdoc =>
-        bdoc.ToDictionary(
-          bd => bd.Key,
-          bd => bd.Value.ToString()));
-    var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
-    return resultsJson;
-  }
-
-  private List<BsonDocument> GetResults(string sql, int MaxResults)
-  {
-    var results = new List<BsonDocument>();
-    using var reader = _db.Execute(sql, new BsonDocument());
-    while (reader.Read())
-    {
-      var val = reader.Current;
-      if (val.IsDocument)
-      {
-        results.Add(val.AsDocument);
-      }
-
-      if (results.Count >= MaxResults)
-      {
-        break;
-      }
-    }
-
-    return results;
   }
 
   private void OnBegin()
@@ -282,6 +250,42 @@ public sealed partial class Index
   {
     var sql = $"DROP COLLECTION {_selColl};";
     await UpdateQuery(sql);
+  }
+
+  #endregion
+
+  #region SQL execution
+
+  private static string GetResultsJson(IEnumerable<BsonDocument> results, JsonSerializerOptions options)
+  {
+    var resultsDicStr = results
+      .Select(bdoc =>
+        bdoc.ToDictionary(
+          bd => bd.Key,
+          bd => bd.Value.ToString()));
+    var resultsJson = JsonSerializer.Serialize(resultsDicStr, options);
+    return resultsJson;
+  }
+
+  private List<BsonDocument> GetResults(string sql, int maxResults)
+  {
+    var results = new List<BsonDocument>();
+    using var reader = _db.Execute(sql, new BsonDocument());
+    while (reader.Read())
+    {
+      var val = reader.Current;
+      if (val.IsDocument)
+      {
+        results.Add(val.AsDocument);
+      }
+
+      if (results.Count >= maxResults)
+      {
+        break;
+      }
+    }
+
+    return results;
   }
 
   #endregion
