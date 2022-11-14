@@ -47,11 +47,6 @@ public sealed partial class Index
     return EditorOptions("sql");
   }
 
-  public Index()
-  {
-    AddTab();
-  }
-
   private void OnCollectionSelected(string coll)
   {
     _selColl = coll;
@@ -114,6 +109,11 @@ public sealed partial class Index
     _fileName = file.Name;
     _db = new LiteDatabase(_strm);
     _collections = _db.GetCollectionNames().ToHashSet();
+
+    if (_tabs.Count == 0)
+    {
+      AddTab();
+    }
   }
 
   private async Task OnDownload()
