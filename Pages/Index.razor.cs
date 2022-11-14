@@ -1,5 +1,7 @@
 namespace LiteDB.Studio.WebAssembly.Pages;
 
+using System.Text;
+using System.Text.Json;
 using BlazorMonaco;
 using KristofferStrube.Blazor.FileSystemAccess;
 using Microsoft.AspNetCore.Components;
@@ -134,6 +136,33 @@ public sealed partial class Index
 
     var activeTab = _tabs[_activeTabIndex];
     var sql = await activeTab.Query.GetValue();
+    var results = GetResults(sql, MaxResults);
+    var options = new JsonSerializerOptions
+    {
+      WriteIndented = true
+    };
+    var resultsJson = GetResultsJson(results, options);
+
+    activeTab.Results = results;
+    activeTab.ResultsJson = resultsJson;
+    activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
+
+    _collections = _db.GetCollectionNames().ToHashSet();
+  }
+
+  private static string GetResultsJson(List<BsonDocument> results, JsonSerializerOptions options)
+  {
+    var resultsDicStr = results
+      .Select(bdoc =>
+        bdoc.ToDictionary(
+          bd => bd.Key,
+          bd => bd.Value.ToString()));
+    var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
+    return resultsJson;
+  }
+
+  private List<BsonDocument> GetResults(string sql, int MaxResults)
+  {
     var results = new List<BsonDocument>();
     using var reader = _db.Execute(sql, new BsonDocument());
     while (reader.Read())
@@ -150,22 +179,7 @@ public sealed partial class Index
       }
     }
 
-    var resultsDicStr = results
-      .Select(bdoc =>
-        bdoc.ToDictionary(
-          bd => bd.Key,
-          bd => bd.Value.ToString()));
-    var options = new System.Text.Json.JsonSerializerOptions
-    {
-      WriteIndented = true
-    };
-    var resultsJson = System.Text.Json.JsonSerializer.Serialize(resultsDicStr, options);
-
-    activeTab.Results = results;
-    activeTab.ResultsJson = resultsJson;
-    activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
-
-    _collections = _db.GetCollectionNames().ToHashSet();
+    return results;
   }
 
   private void OnBegin()
@@ -241,8 +255,15 @@ public sealed partial class Index
 
   private async Task OnExport()
   {
-    var sql = $"SELECT ${Environment.NewLine}  INTO $file(\'C:/temp/{_selColl}.json\'){Environment.NewLine}  FROM {_selColl};";
-    await UpdateQuery(sql);
+    var sql = $"SELECT $ FROM {_selColl};";
+    var results = GetResults(sql, int.MaxValue);
+    var options = new JsonSerializerOptions
+    {
+      WriteIndented = true
+    };
+    var resultsJson = GetResultsJson(results, options);
+    var data = Encoding.Unicode.GetBytes(resultsJson);
+    await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", $"{_selColl}.json", "application/json", data);
   }
 
   private async Task OnAnalyse()
