@@ -14,12 +14,18 @@
 
 <PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
 
+<ContextMenu Id="databaseMenu">
+  <Item OnClick="@(async () => await OnDatabaseInfo())" Enabled="!_disableMainMenu">Database info</Item>
+  <Item OnClick="@(async () => await OnRebuild())" Enabled="!_disableMainMenu">Rebuild</Item>
+</ContextMenu>
+
 <ContextMenu Id="collectionsMenu">
   <Item OnClick="@(async () => await OnAll())" Enabled="_enableCollMenu">All</Item>
   <Item OnClick="@(async () => await OnCount())" Enabled="_enableCollMenu">Count</Item>
   <Item OnClick="@(async () => await OnExplainPlan())" Enabled="_enableCollMenu">Explain plan</Item>
   <Seperator/>
   <Item OnClick="@(async () => await OnIndexes())" Enabled="_enableCollMenu">Indexes</Item>
+  <Seperator/>
   <Item OnClick="@(async () => await OnExport())" Enabled="_enableCollMenu">Export</Item>
   <Item OnClick="@(async () => await OnAnalyse())" Enabled="_enableCollMenu">Analyse</Item>
   <Item OnClick="@(async () => await OnRename())" Enabled="_enableCollMenu">Rename</Item>
@@ -42,14 +48,16 @@
 <MudGrid>
   <MudItem xs="2">
     <MudTreeView T="string" Items="_collections" SelectedValueChanged="OnCollectionSelected">
-      <MudTreeViewItem T="string" Text="@_fileName">
-        @foreach (var coll in _collections)
-        {
-          <ContextMenuTrigger MenuId="collectionsMenu">
-            <MudTreeViewItem T="string" Text="@coll" Value="@coll"/>
-          </ContextMenuTrigger>
-        }
-      </MudTreeViewItem>
+      <ContextMenuTrigger MenuId="databaseMenu">
+        <MudTreeViewItem T="string" Text="@_fileName">
+          @foreach (var coll in _collections)
+          {
+            <ContextMenuTrigger MenuId="collectionsMenu">
+              <MudTreeViewItem T="string" Text="@coll" Value="@coll"/>
+            </ContextMenuTrigger>
+          }
+        </MudTreeViewItem>
+      </ContextMenuTrigger>
     </MudTreeView>
   </MudItem>
 

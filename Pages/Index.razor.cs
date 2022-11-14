@@ -190,13 +190,30 @@ public sealed partial class Index
 
   #endregion
 
-  #region collection context menus
-
   private async Task UpdateQuery(string query)
   {
     var activeTab = _tabs[_activeTabIndex];
     await activeTab.Query.SetValue(query);
   }
+
+  #region database context menus
+
+  private async Task OnDatabaseInfo()
+  {
+    var sql = "SELECT $ FROM $database;";
+    await UpdateQuery(sql);
+  }
+
+  private async Task OnRebuild()
+  {
+    // encryption not supported on wasm
+    var sql = "REBUILD { collation: 'en-US/IgnoreCase' };";
+    await UpdateQuery(sql);
+  }
+
+  #endregion
+
+  #region collection context menus
 
   private async Task OnAll()
   {
