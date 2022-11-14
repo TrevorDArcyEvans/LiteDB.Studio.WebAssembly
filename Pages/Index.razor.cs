@@ -11,7 +11,11 @@ public sealed partial class Index
   [Inject]
   private FileSystemAccessService _fileSysSvc { get; set; }
 
+  [Inject]
+  private IJSRuntime JSRuntime { get; set; }
+
   private LiteDatabase _db;
+  private MemoryStream _strm;
 
   private List<TabView> _tabs = new();
   private int _allTabsCount;
@@ -41,6 +45,11 @@ public sealed partial class Index
   private static StandaloneEditorConstructionOptions SQL_EditorOptions(MonacoEditor editor)
   {
     return EditorOptions("sql");
+  }
+
+  public Index()
+  {
+    AddTab();
   }
 
   private void OnCollectionSelected(string coll)
@@ -101,10 +110,17 @@ public sealed partial class Index
     // do not construct stream via text as this will give an incompatible stream
     var data = await file.ArrayBufferAsync();
 
-    var strm = new MemoryStream(data);
+    _strm = new MemoryStream(data);
     _fileName = file.Name;
-    _db = new LiteDatabase(strm);
+    _db = new LiteDatabase(_strm);
     _collections = _db.GetCollectionNames().ToHashSet();
+  }
+
+  private async Task OnDownload()
+  {
+    // Rebuild will flush changes
+    _db.Rebuild();
+    await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", _fileName, "application/octet-stream", _strm.ToArray());
   }
 
   private void OnRefresh()

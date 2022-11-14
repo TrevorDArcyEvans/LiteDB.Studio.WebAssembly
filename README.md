@@ -29,4 +29,4 @@ All streams are not the same and we must use `File.ArrayBufferAsync()` to create
   * collation
   * upgrade from v4
 * support disconnect
-* download updated database
+* ~~download updated database~~

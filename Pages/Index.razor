@@ -29,6 +29,7 @@
 <MudPaper Elevation="25">
   <MudToolBar>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.OpenInBrowser" OnClick="@(async () => await OnOpen())">Open...</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Download" OnClick="@(async () => await OnDownload())" Disabled="_disableMainMenu">Download...</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh" OnClick="OnRefresh" Disabled="_disableMainMenu">Refresh</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DirectionsRun" OnClick="@(async () => await OnRun())" Disabled="_disableMainMenu || _tabs.Count == 0">Run</MudButton>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Start" OnClick="OnBegin" Disabled="_disableMainMenu">Begin</MudButton>
