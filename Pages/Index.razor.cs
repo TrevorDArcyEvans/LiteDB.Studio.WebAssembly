@@ -1,6 +1,5 @@
 namespace LiteDB.Studio.WebAssembly.Pages;
 
-using System.Text;
 using BlazorMonaco;
 using KristofferStrube.Blazor.FileSystemAccess;
 using Microsoft.AspNetCore.Components;
@@ -98,8 +97,11 @@ public sealed partial class Index
     }
 
     var file = await fileHandle.GetFileAsync();
-    var dbStr = await file.TextAsync();
-    var strm = GenerateStreamFromString(dbStr);
+
+    // do not construct stream via text as this will give an incompatible stream
+    var data = await file.ArrayBufferAsync();
+
+    var strm = new MemoryStream(data);
     _fileName = file.Name;
     _db = new LiteDatabase(strm);
     _collections = _db.GetCollectionNames().ToHashSet();
@@ -107,6 +109,7 @@ public sealed partial class Index
 
   private void OnRefresh()
   {
+    _collections = _db.GetCollectionNames().ToHashSet();
   }
 
   private async Task OnRun()
@@ -146,10 +149,7 @@ public sealed partial class Index
     activeTab.ResultsJson = resultsJson;
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
 
-    // TODO   blocked by bug in LiteDB
-    //    [BUG] Exception thrown dropping collection when database loaded from memory stream
-    //      https://github.com/mbdavid/LiteDB/issues/2247
-
+    _collections = _db.GetCollectionNames().ToHashSet();
   }
 
   private void OnBegin()
@@ -231,9 +231,4 @@ public sealed partial class Index
   }
 
   #endregion
-
-  private static Stream GenerateStreamFromString(string str)
-  {
-    return new MemoryStream(Encoding.ASCII.GetBytes(str));
-  }
 }
