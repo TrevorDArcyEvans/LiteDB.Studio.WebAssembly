@@ -230,7 +230,7 @@ public sealed partial class Index
       WriteIndented = true
     };
     var resultsJson = GetResultsJson(results, options);
-    var data = Encoding.Unicode.GetBytes(resultsJson);
+    var data = Encoding.UTF8.GetBytes(resultsJson);
     await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", $"{_selColl}.json", "application/json", data);
   }
 
