@@ -147,7 +147,7 @@ public sealed partial class Index
     activeTab.ResultsJson = resultsJson;
     activeTab.Parameters = System.Text.Json.JsonSerializer.Serialize(new { }, options);
 
-    _collections = _db.GetCollectionNames().ToHashSet();
+    OnRefresh();
   }
 
   private void OnBegin()
@@ -184,6 +184,39 @@ public sealed partial class Index
   {
     var sql = "SELECT $ FROM $database;";
     await UpdateQuery(sql);
+  }
+
+  private async Task OnImport()
+  {
+    FileSystemFileHandle? fileHandle = null;
+    try
+    {
+      OpenFilePickerOptionsStartInWellKnownDirectory options = new()
+      {
+        Multiple = false,
+        StartIn = WellKnownDirectory.Downloads
+      };
+      var fileHandles = await _fileSysSvc.ShowOpenFilePickerAsync(options);
+      fileHandle = fileHandles.Single();
+    }
+    catch (JSException ex)
+    {
+      // Handle Exception or cancellation of File Access prompt
+    }
+
+    if (fileHandle is null)
+    {
+      return;
+    }
+
+    var file = await fileHandle.GetFileAsync();
+    var json = await file.TextAsync();
+    var docs = LiteDB.JsonSerializer.DeserializeArray(json).Select(x => x.AsDocument);
+    var collName = Path.GetFileNameWithoutExtension(file.Name);
+    var coll = _db.GetCollection(collName);
+    coll.InsertBulk(docs);
+
+    OnRefresh();
   }
 
   private async Task OnRebuild()

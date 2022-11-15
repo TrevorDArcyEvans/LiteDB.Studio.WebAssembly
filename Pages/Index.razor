@@ -16,6 +16,8 @@
 
 <ContextMenu Id="databaseMenu">
   <Item OnClick="@(async () => await OnDatabaseInfo())" Enabled="!_disableMainMenu">Database info</Item>
+  <Seperator />
+  <Item OnClick="@(async () => await OnImport())" Enabled="!_disableMainMenu">Import JSON...</Item>
   <Item OnClick="@(async () => await OnRebuild())" Enabled="!_disableMainMenu">Rebuild</Item>
 </ContextMenu>
 
