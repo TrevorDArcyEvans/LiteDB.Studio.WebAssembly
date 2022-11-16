@@ -18,7 +18,7 @@ public sealed partial class Index
 
   [Inject]
   private IDialogService _dlgSvc { get; set; }
-  
+
   private LiteDatabase _db;
   private MemoryStream _strm;
 
@@ -71,7 +71,7 @@ public sealed partial class Index
 
   private void CloseTab(MudTabPanel panel)
   {
-    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid) panel.Tag);
+    var tabView = _tabs.FirstOrDefault(x => x.Id == (Guid)panel.Tag);
     if (tabView is not null)
     {
       _tabs.Remove(tabView);
@@ -175,6 +175,14 @@ public sealed partial class Index
 
   private void OnDebug()
   {
+    var page = _db.GetCollection($"$dump(0)").Query().FirstOrDefault();
+    var dump = new HtmlPageDump(page);
+    var body = dump.Render();
+    var parameters = new DialogParameters
+    {
+      { nameof(Debug.Body), body }
+    };
+
     var options = new DialogOptions
     {
       FullScreen = true,
@@ -182,7 +190,8 @@ public sealed partial class Index
       CloseButton = true,
       NoHeader = true
     };
-    _dlgSvc.Show<Debug>("Debug", options);
+
+    _dlgSvc.Show<Debug>("Debug", parameters, options);
   }
 
   #endregion

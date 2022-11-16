@@ -1,11 +1,13 @@
 ﻿@page "/Debug"
 
-<MudDialog>
+<MudDialog DisableSidePadding="true">
   <DialogContent>
-    Dialog Content
+    <MudContainer Style="max-height: 800px; overflow-y: scroll">
+      @((MarkupString)Body)
+    </MudContainer>
   </DialogContent>
   <DialogActions>
-    <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    <MudButton Variant="Variant.Filled" OnClick="Submit">Ok</MudButton>
   </DialogActions>
 </MudDialog>
 
@@ -13,6 +15,9 @@
 
   [CascadingParameter]
   private MudDialogInstance MudDialog { get; set; }
+
+  [Parameter]
+  public string Body { get; set; }
 
   void Submit() => MudDialog.Close(DialogResult.Ok(true));
 }
