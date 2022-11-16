@@ -10,28 +10,33 @@
     border-color: black;
     border-style: solid;
   }
+  
+  img
+  {
+    margin-right: 5px;
+  }
 </style>
 
 <PageTitle>LiteDB Studio (WebAssembly version)</PageTitle>
 
 <ContextMenu Id="databaseMenu">
-  <Item OnClick="@(async () => await OnDatabaseInfo())" Enabled="!_disableMainMenu">Database info</Item>
+  <Item OnClick="@(async () => await OnDatabaseInfo())" Enabled="!_disableMainMenu"><img src="icons/information.png">Database info</Item>
   <Seperator/>
-  <Item OnClick="@(async () => await OnImport())" Enabled="!_disableMainMenu">Import JSON...</Item>
-  <Item OnClick="@(async () => await OnRebuild())" Enabled="!_disableMainMenu">Rebuild</Item>
+  <Item OnClick="@(async () => await OnImport())" Enabled="!_disableMainMenu"><img src="icons/layout_add.png">Import JSON...</Item>
+  <Item OnClick="@(async () => await OnRebuild())" Enabled="!_disableMainMenu"><img src="icons/compress.png">Rebuild</Item>
 </ContextMenu>
 
 <ContextMenu Id="collectionsMenu">
-  <Item OnClick="@(async () => await OnAll())" Enabled="_enableCollMenu">All</Item>
-  <Item OnClick="@(async () => await OnCount())" Enabled="_enableCollMenu">Count</Item>
-  <Item OnClick="@(async () => await OnExplainPlan())" Enabled="_enableCollMenu">Explain plan</Item>
+  <Item OnClick="@(async () => await OnAll())" Enabled="_enableCollMenu"><img src="icons/table_lightning.png">All</Item>
+  <Item OnClick="@(async () => await OnCount())" Enabled="_enableCollMenu"><img src="icons/table.png">Count</Item>
+  <Item OnClick="@(async () => await OnExplainPlan())" Enabled="_enableCollMenu"><img src="icons/table_sort.png">Explain plan</Item>
   <Seperator/>
-  <Item OnClick="@(async () => await OnIndexes())" Enabled="_enableCollMenu">Indexes</Item>
+  <Item OnClick="@(async () => await OnIndexes())" Enabled="_enableCollMenu"><img src="icons/key.png">Indexes</Item>
   <Seperator/>
-  <Item OnClick="@(async () => await OnExport())" Enabled="_enableCollMenu">Export</Item>
-  <Item OnClick="@(async () => await OnAnalyse())" Enabled="_enableCollMenu">Analyse</Item>
-  <Item OnClick="@(async () => await OnRename())" Enabled="_enableCollMenu">Rename</Item>
-  <Item OnClick="@(async () => await OnDrop())" Enabled="_enableCollMenu">Drop</Item>
+  <Item OnClick="@(async () => await OnExport())" Enabled="_enableCollMenu"><img src="icons/table_save.png">Export</Item>
+  <Item OnClick="@(async () => await OnAnalyse())" Enabled="_enableCollMenu"><img src="icons/page_white_gear.png">Analyse</Item>
+  <Item OnClick="@(async () => await OnRename())" Enabled="_enableCollMenu"><img src="icons/textfield_rename.png">Rename</Item>
+  <Item OnClick="@(async () => await OnDrop())" Enabled="_enableCollMenu"><img src="icons/table_delete.png">Drop</Item>
 </ContextMenu>
 
 <MudPaper Elevation="25">
