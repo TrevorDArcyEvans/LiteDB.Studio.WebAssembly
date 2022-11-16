@@ -27,7 +27,7 @@
 </ContextMenu>
 
 <ContextMenu Id="collectionsMenu">
-  <Item OnClick="@(async () => await OnAll())" Enabled="_enableCollMenu"><img src="icons/table_lightning.png">All</Item>
+  <Item OnClick="@(async () => await OnQuery())" Enabled="_enableCollMenu"><img src="icons/table_lightning.png">Query</Item>
   <Item OnClick="@(async () => await OnCount())" Enabled="_enableCollMenu"><img src="icons/table.png">Count</Item>
   <Item OnClick="@(async () => await OnExplainPlan())" Enabled="_enableCollMenu"><img src="icons/table_sort.png">Explain plan</Item>
   <Seperator/>

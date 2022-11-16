@@ -92,7 +92,7 @@ public sealed partial class Index
       var fileHandles = await _fileSysSvc.ShowOpenFilePickerAsync(options);
       fileHandle = fileHandles.Single();
     }
-    catch (JSException ex)
+    catch (JSException)
     {
       // Handle Exception or cancellation of File Access prompt
     }
@@ -199,7 +199,7 @@ public sealed partial class Index
       var fileHandles = await _fileSysSvc.ShowOpenFilePickerAsync(options);
       fileHandle = fileHandles.Single();
     }
-    catch (JSException ex)
+    catch (JSException)
     {
       // Handle Exception or cancellation of File Access prompt
     }
@@ -230,7 +230,7 @@ public sealed partial class Index
 
   #region collection context menus
 
-  private async Task OnAll()
+  private async Task OnQuery()
   {
     var sql = $"SELECT $ FROM {_selColl};";
     await UpdateQuery(sql);
