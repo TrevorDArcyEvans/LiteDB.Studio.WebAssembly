@@ -121,6 +121,15 @@ public sealed partial class Index
     }
   }
 
+  private async Task OnDisconnect()
+  {
+    _fileName = string.Empty;
+    _tabs.Clear();
+    _collections.Clear();
+    _db.Dispose();
+    _db = null;
+  }
+
   private async Task OnDownload()
   {
     // Rebuild will flush changes

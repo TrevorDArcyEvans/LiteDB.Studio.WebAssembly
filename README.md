@@ -28,5 +28,5 @@ All streams are not the same and we must use `File.ArrayBufferAsync()` to create
   * password
   * collation
   * upgrade from v4
-* support disconnect
+* ~~support disconnect~~
 * ~~download updated database~~
