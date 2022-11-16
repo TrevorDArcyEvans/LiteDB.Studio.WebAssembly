@@ -16,6 +16,9 @@ public sealed partial class Index
   [Inject]
   private IJSRuntime JSRuntime { get; set; }
 
+  [Inject]
+  private IDialogService _dlgSvc { get; set; }
+  
   private LiteDatabase _db;
   private MemoryStream _strm;
 
@@ -168,6 +171,18 @@ public sealed partial class Index
   private void OnCheckpoint()
   {
     _db.Checkpoint();
+  }
+
+  private void OnDebug()
+  {
+    var options = new DialogOptions
+    {
+      FullScreen = true,
+      CloseOnEscapeKey = true,
+      CloseButton = true,
+      NoHeader = true
+    };
+    _dlgSvc.Show<Debug>("Debug", options);
   }
 
   #endregion
