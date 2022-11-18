@@ -23,9 +23,13 @@ open [LiteDB.Studio.WebAssembly](https://localhost:7050/)
 
 All streams are not the same and we must use `File.ArrayBufferAsync()` to create a compatible stream.
 
+## Limitations
+Encryption (System.Security.Cryptography.Algorithms) is not support on WebAssembly, so it is not possible
+to open an database with a password.
+
 ## Further work
 * support options when opening:
-  * password
+  * ~~password~~
   * collation
   * upgrade from v4
 * ~~support disconnect~~
